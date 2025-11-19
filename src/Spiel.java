@@ -43,6 +43,7 @@ public class Spiel
         while(true)
         {
             if(fenster.keyEnterPressed()) break;
+
             startText.setHidden(false);
             fenster.wait(300);
 
@@ -52,7 +53,19 @@ public class Spiel
             fenster.wait(300);
             if(fenster.keyEnterPressed()) break;
         }
-
+        startText.setHidden(false);
+        startText.setFontSansSerif(true,200);
+        startText.moveTo(650,200);
+        startText.setText("3");
+        fenster.wait(1000);
+        startText.setText("2");
+        fenster.wait(1000);
+        startText.setText("1");
+        fenster.wait(1000);
+        startText.setFontSansSerif(true,100);
+        startText.moveTo(550,250);
+        startText.setText("LOS!!!");
+        fenster.wait(500);
         startText.setHidden(true);
         this.spielStart();
 
