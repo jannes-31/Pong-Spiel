@@ -93,11 +93,13 @@ public class Spiel
 
         ballRichtung = new Random();
         int zufallsRichtung = 90;
-        while(zufallsRichtung%90 == 0)
+
+        while(zufallsRichtung % 900 == 0)
         {
-            zufallsRichtung = ballRichtung.nextInt(361);
+            zufallsRichtung = ballRichtung.nextInt(361) * 10; // <--- WICHTIG: ×10
             ball.setDirection(zufallsRichtung);
         }
+
 
 
 
@@ -106,31 +108,45 @@ public class Spiel
 
 
 
-            if (fenster.keyPressed('w') && schlaeger1.getShapeY() > 11)
+            if (fenster.keyPressed('w') && schlaeger1.getShapeY() > 11);
             {
                 schlaeger1.move(0,-1);
-
             }
-            if (fenster.keyPressed('s') && schlaeger1.getShapeY() < 709)
+
+            if (fenster.keyPressed('s') && schlaeger1.getShapeY() < 709);
             {
                 schlaeger1.move(0,1);
-
             }
-            if (fenster.keyUpPressed() && schlaeger2.getShapeY() > 11)
+
+            if (fenster.keyUpPressed() && schlaeger2.getShapeY() > 11);
             {
                 schlaeger2.move(0,-1);
-
             }
-            if (fenster.keyDownPressed() && schlaeger2.getShapeY() < 709)
+
+
+            if (fenster.keyDownPressed() && schlaeger2.getShapeY() < 709);
             {
                 schlaeger2.move(0,1);
 
             }
+
             fenster.wait(2);
+
 
             ball.move(bG);
 
+            if (ball.getShapeY() <= 10 || ball.getShapeY() + ball.getShapeHeight() >= fenster.getHeight() - 10) {
+                double neu = (3600 - ball.getDirection()) % 3600;
+                if(neu < 0) neu += 3600;
+                ball.setDirection(neu);
+            }
 
+            if(ball.intersects(schlaeger1) || ball.intersects(schlaeger2)) {
+                double neu = (1800 - ball.getDirection() + 3600) % 3600;
+                ball.setDirection(neu);
+            }
+
+            fenster.wait(2);
 
         }
 
