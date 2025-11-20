@@ -92,9 +92,14 @@ public class Spiel
         int bG = 1;
 
         ballRichtung = new Random();
+        int zufallsRichtung = 90;
+        while(zufallsRichtung%90 == 0)
+        {
+            zufallsRichtung = ballRichtung.nextInt(361);
+            ball.setDirection(zufallsRichtung);
+        }
 
-        int zufallsRichtung = ballRichtung.nextInt(360) + 1;
-        ball.setDirection(zufallsRichtung);
+
 
         while(true)
         {
