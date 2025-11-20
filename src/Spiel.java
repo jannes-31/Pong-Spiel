@@ -1,5 +1,6 @@
 import sas.*;
 import java.awt.Color;
+import java.util.Random;
 
 public class Spiel
 {
@@ -7,7 +8,7 @@ public class Spiel
     Rectangle barriereOben, barriereUnten, barriereLinks, barriereRechts, schlaeger1, schlaeger2 ;
     Circle ball;
     Text startText;
-    int ballStartRichtung;
+    Random ballRichtung;
 
     Spiel() {
         fenster = new View(1400, 800, "Pong");
@@ -88,12 +89,15 @@ public class Spiel
     void spielStart()
     {
 
+        int bG = 1;
 
+        ballRichtung = new Random();
+
+        int zufallsRichtung = ballRichtung.nextInt(360) + 1;
+        ball.setDirection(zufallsRichtung);
 
         while(true)
         {
-
-
 
 
 
@@ -118,6 +122,11 @@ public class Spiel
 
             }
             fenster.wait(2);
+
+            ball.move(bG);
+
+
+
         }
 
 
