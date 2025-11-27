@@ -5,10 +5,9 @@ import java.util.Random;
 public class Spiel
 {
     View fenster;
-    Rectangle barriereOben, barriereUnten, barriereLinks, barriereRechts, schlaeger1, schlaeger2 ;
+    Rectangle barriereOben, barriereUnten, barriereLinks, barriereRechts, schlaeger1, schlaeger2;
     Circle ball;
     Text startText;
-    Random ballRichtung;
 
     Spiel() {
         fenster = new View(1400, 800, "Pong");
@@ -91,74 +90,61 @@ public class Spiel
 
         int bG = 1;
 
-        ballRichtung = new Random();
-        int zufallsRichtung = 90;
-
-        while(zufallsRichtung% 90 == 0)
-            {
-                zufallsRichtung = ballRichtung.nextInt(361);
-                ball.setDirection(zufallsRichtung);
-            }
-
-
+        int winkel = Tools.randomNumber(1,360);
+        
+        while (winkel == 90 || winkel == 180 || winkel == 270 || winkel ==360) 
+        {
+            winkel = Tools.randomNumber(1,360);
+        }
+            
+        ball.setDirection(winkel * 10);
+        
+        int dX = 1;
+        int dY = 1;
+        
         while(true)
         {
 
-
-
             if (fenster.keyPressed('w') && schlaeger1.getShapeY() > 11)
-            {
-                schlaeger1.move(0,-1);
-            }
+                {
+                    schlaeger1.move(0,-1);
+                }
 
             if (fenster.keyPressed('s') && schlaeger1.getShapeY() < 709)
-            {
-                schlaeger1.move(0,1);
-            }
+                {
+                    schlaeger1.move(0,1);
+                }
 
             if (fenster.keyUpPressed() && schlaeger2.getShapeY() > 11)
-            {
-                schlaeger2.move(0,-1);
-            }
-
+                {
+                    schlaeger2.move(0,-1);
+                }
 
             if (fenster.keyDownPressed() && schlaeger2.getShapeY() < 709)
-            {
-                schlaeger2.move(0,1);
-
-            }
+                {
+                    schlaeger2.move(0,1);
+                }
 
             fenster.wait(2);
 
+            ball.move(dX, dY);
 
-            ball.move(bG);
-
-            if (ball.getShapeY() <= 10 || ball.getShapeY() + ball.getShapeHeight() >= fenster.getHeight() - 10) {
-                ball.setDirection(360 - ball.getDirection());
-            }
-
-            if (ball.intersects(schlaeger1)) {
-                double neueRichtung = 180 - ball.getDirection();
-                ball.setDirection((neueRichtung + 360) % 360);
-            }
-
-            if (ball.intersects(schlaeger2)) {
-                double neueRichtung = 180 - ball.getDirection();
-                ball.setDirection((neueRichtung + 360) % 360);
-            }
-
-
-
-            double richtung = ball.getDirection() % 360;
-            if (richtung < 0) richtung += 360;
-            ball.setDirection(richtung);
-
+            if (ball.intersects(schlaeger1) || ball.intersects(schlaeger2)) 
+                {
+                    dX = - dX; 
+                }    
+            
+            if (ball.intersects(barriereOben) || ball.intersects(barriereUnten))
+                {
+                    dY = - dY;
+                }
+                
             fenster.wait(2);
 
         }
 
 
-
+               
 
     }
 
