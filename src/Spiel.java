@@ -4,11 +4,12 @@ import java.awt.Color;
 public class Spiel
 {
     View fenster;
-    Rectangle barriereOben, barriereUnten, barriereLinks, barriereRechts, schlaeger1, schlaeger2;
+    Rectangle barriereOben, barriereUnten, barriereLinks, barriereRechts, schlaeger1, schlaeger2, punkteAnzeige1, punkteAnzeige2, teamFarbe1, teamFarbe2;
     Circle ball;
     Text startText, punkte1, punkte2, punkteStand1, punkteStand2;
 
-    Spiel() {
+    Spiel()
+    {
         fenster = new View(1400, 800, "Pong");
         fenster.setBackgroundColor(Color.lightGray);
 
@@ -27,22 +28,36 @@ public class Spiel
         barriereRechts.setColor(Color.darkGray);
 
         schlaeger1 = new Rectangle(20, 360, 10, 80);
-        schlaeger1.setColor(Color.blue);
+        schlaeger1.setColor(Color.red);
 
         schlaeger2 = new Rectangle(1370, 360, 10, 80);
-        schlaeger2.setColor(Color.red);
+        schlaeger2.setColor(Color.blue);
 
         ball = new Circle(690, 390, 10);
         ball.setColor(Color.yellow);
 
-        startText = new Text(265, 200, "DRUECKE ENTER UM ZU STARTEN");
+        startText = new Text(265, 200, "DRÜCKE ENTER UM ZU STARTEN");
         startText.setFontSansSerif(true, 50);
 
-        punkte1 = new Text(250, 300, "");
-        punkte1.setFontSansSerif(true,100);
+        punkteAnzeige1 = new Rectangle(20,20,130,40);
+        punkteAnzeige1.setColor(Color.gray);
+        teamFarbe1 = new Rectangle(21,21,38,38);
+        teamFarbe1.setColor(Color.red);
+        punkteStand1 = new Text(61,21,"Rot:");
+        punkteStand1.setFontSansSerif(true,30);
 
-        punkte2 = new Text(950, 300, "");
-        punkte2.setFontSansSerif(true, 100);
+        punkteAnzeige2 = new Rectangle(1240,20,140,40);
+        punkteAnzeige2.setColor(Color.gray);
+        teamFarbe2 = new Rectangle(1241,21,38,38);
+        teamFarbe2.setColor(Color.blue);
+        punkteStand2 = new Text(1280,21,"Blau:");
+        punkteStand2.setFontSansSerif(true,30);
+
+        punkte1 = new Text(950, 300, "");
+        punkte1.setFontSansSerif(true, 100);
+
+        punkte2 = new Text(250, 300, "");
+        punkte2.setFontSansSerif(true,100);
 
         while (true) {
             if (fenster.keyEnterPressed()) break;
@@ -58,6 +73,15 @@ public class Spiel
             if (fenster.keyEnterPressed()) break;
         }
 
+
+        this.startText();
+        this.startPunkt();
+        this.spielFunktion();
+
+    }
+
+    void startText()
+    {
         startText.setHidden(false);
         startText.setFontSansSerif(true,200);
         startText.moveTo(650,200);
@@ -72,11 +96,7 @@ public class Spiel
         startText.setText("LOS!!!");
         fenster.wait(500);
         startText.setHidden(true);
-        this.startPunkt();
-        this.spielFunktion();
-
     }
-
 
     void mittelpunktErstellen()
     {
@@ -101,40 +121,53 @@ public class Spiel
         ball.setDirection(winkel * 10);
     }
 
+
     void spielFunktion()
     {
-        int dX = 1;
-        int dY = 1;
+        int dX = 2;
+        int dY = 2;
+
+        int sY = 2;
 
         int p1 = 0;
         int p2 = 0;
 
+        long startZeit = Tools.getStartTime();
+
         while(true)
         {
-
             if (fenster.keyPressed('w') && schlaeger1.getShapeY() > 11)
             {
-                schlaeger1.move(0,-1);
+                schlaeger1.move(0,-sY);
             }
 
             if (fenster.keyPressed('s') && schlaeger1.getShapeY() < 709)
             {
-                schlaeger1.move(0,1);
+                schlaeger1.move(0,sY);
             }
 
             if (fenster.keyUpPressed() && schlaeger2.getShapeY() > 11)
             {
-                schlaeger2.move(0,-1);
+                schlaeger2.move(0,-sY);
             }
 
             if (fenster.keyDownPressed() && schlaeger2.getShapeY() < 709)
             {
-                schlaeger2.move(0,1);
+                schlaeger2.move(0,sY);
             }
 
             fenster.wait(2);
 
             ball.move(dX, dY);
+
+            if (Tools.getElapsedTime(startZeit) >= 10)
+            {
+                dX *= 1.1;
+                dY *= 1.1;
+                startZeit = Tools.getStartTime();
+            }
+
+            fenster.wait(5);
 
             if (ball.intersects(schlaeger1) || ball.intersects(schlaeger2))
             {
@@ -151,6 +184,7 @@ public class Spiel
                 if(barriereLinks.intersects(ball))
                 {
                     p1++;
+                    punkteStand1.setText("Rot: " + p1);
                 }
 
                 if (barriereLinks.intersects(ball) && p1 < 10)
@@ -159,65 +193,50 @@ public class Spiel
                     punkte2.setText("" + p1);
                     fenster.wait(1000);
                     punkte2.setHidden(true);
-                    this.startPunkt();
 
-                    startText.setHidden(false);
-                    startText.setFontSansSerif(true,200);
-                    startText.moveTo(650,200);
-                    startText.setText("3");
-                    fenster.wait(1000);
-                    startText.setText("2");
-                    fenster.wait(1000);
-                    startText.setText("1");
-                    fenster.wait(1000);
-                    startText.setFontSansSerif(true,100);
-                    startText.moveTo(550,250);
-                    startText.setText("LOS!!!");
-                    fenster.wait(500);
-                    startText.setHidden(true);
+                    this.startPunkt();
+                    this.startText();
+
+                    dX = 1;
+                    dY = 1;
+                    startZeit = Tools.getStartTime();
                 }
 
                 if(barriereRechts.intersects(ball))
                 {
                     p2++;
+                    punkteStand2.setText("Blau: " + p2);
                 }
+
                 if(barriereRechts.intersects(ball) && p2 < 10)
                 {
                     punkte1.setHidden(false);
                     punkte1.setText("" + p2);
                     fenster.wait(1000);
                     punkte1.setHidden(true);
-                    this.startPunkt();
 
-                    startText.setHidden(false);
-                    startText.setFontSansSerif(true,200);
-                    startText.moveTo(650,200);
-                    startText.setText("3");
-                    fenster.wait(1000);
-                    startText.setText("2");
-                    fenster.wait(1000);
-                    startText.setText("1");
-                    fenster.wait(1000);
-                    startText.setFontSansSerif(true,100);
-                    startText.moveTo(550,250);
-                    startText.setText("LOS!!!");
-                    fenster.wait(500);
-                    startText.setHidden(true);
+                    this.startPunkt();
+                    this.startText();
+
+                    dX = 1;
+                    dY = 1;
+                    startZeit = Tools.getStartTime();
                 }
 
             if (p1 > 10 || p2 > 10)
             {
                 startText.setHidden(false);
-                startText.moveTo(330,160);
+                startText.moveTo(630,160);
                 startText.setText("Game Over!");
                 startText.setFontSansSerif(true,70);
-                fenster.wait(1000);
+                fenster.wait(5000);
                 startText.setHidden(true);
 
                 break;
             }
         }
     }
+
 
     public static void main(String[] args)
     {
