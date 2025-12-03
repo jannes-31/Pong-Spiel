@@ -80,6 +80,17 @@ public class Spiel
 
     }
 
+    void mittelpunktErstellen()
+    {
+        Rectangle mittelBarriere;
+        for(int zeile = 0; zeile < 10; zeile++)
+        {
+            mittelBarriere = new Rectangle(696,zeile*80+15,8,50);
+            mittelBarriere.setTransparency(0.2f);
+        }
+    }
+
+
     void startText()
     {
         startText.setHidden(false);
@@ -98,15 +109,6 @@ public class Spiel
         startText.setHidden(true);
     }
 
-    void mittelpunktErstellen()
-    {
-        Rectangle mittelBarriere;
-        for(int zeile = 0; zeile < 10; zeile++)
-            {
-                mittelBarriere = new Rectangle(696,zeile*80+15,8,50);
-                mittelBarriere.setTransparency(0.2f);
-            }
-    }
 
 
     void startPunkt()
@@ -114,7 +116,8 @@ public class Spiel
         ball.moveTo(690,390);
         int winkel = Tools.randomNumber(1, 360);
 
-        while (winkel == 90 || winkel == 180 || winkel == 270 || winkel == 360) {
+        while (winkel%90 == 0)
+        {
             winkel = Tools.randomNumber(1, 360);
         }
 
@@ -124,10 +127,10 @@ public class Spiel
 
     void spielFunktion()
     {
-        int dX = 2;
-        int dY = 2;
+        int dX = 3;
+        int dY = 3;
 
-        int sY = 2;
+        int sY = 6;
 
         int p1 = 0;
         int p2 = 0;
@@ -162,8 +165,8 @@ public class Spiel
 
             if (Tools.getElapsedTime(startZeit) >= 10)
             {
-                dX *= 1.1;
-                dY *= 1.1;
+                dX *= 1;
+                dY *= 1;
                 startZeit = Tools.getStartTime();
             }
 
@@ -172,22 +175,26 @@ public class Spiel
             if (ball.intersects(schlaeger1) || ball.intersects(schlaeger2))
             {
                 dX = - dX;
+                dX *= 1.4;
+                dY *= 1.4;
             }
 
             if (ball.intersects(barriereOben) || ball.intersects(barriereUnten))
             {
                 dY = - dY;
+                dX *= 1.1;
+                dY *= 1.1;
             }
 
             fenster.wait(2);
 
-                if(barriereLinks.intersects(ball))
+                if(ball.intersects(barriereLinks))
                 {
                     p1++;
                     punkteStand1.setText("Rot: " + p1);
                 }
 
-                if (barriereLinks.intersects(ball) && p1 < 10)
+                if (ball.intersects(barriereLinks) && p1 < 10)
                 {
                     punkte2.setHidden(false);
                     punkte2.setText("" + p1);
@@ -197,18 +204,18 @@ public class Spiel
                     this.startPunkt();
                     this.startText();
 
-                    dX = 1;
-                    dY = 1;
+                    dX = 4;
+                    dY = 4;
                     startZeit = Tools.getStartTime();
                 }
 
-                if(barriereRechts.intersects(ball))
+                if(ball.intersects(barriereRechts))
                 {
                     p2++;
                     punkteStand2.setText("Blau: " + p2);
                 }
 
-                if(barriereRechts.intersects(ball) && p2 < 10)
+                if(ball.intersects(barriereRechts) && p2 < 10)
                 {
                     punkte1.setHidden(false);
                     punkte1.setText("" + p2);
@@ -218,8 +225,8 @@ public class Spiel
                     this.startPunkt();
                     this.startText();
 
-                    dX = 1;
-                    dY = 1;
+                    dX = 4;
+                    dY = 4;
                     startZeit = Tools.getStartTime();
                 }
 
@@ -227,7 +234,7 @@ public class Spiel
             {
                 startText.setHidden(false);
                 startText.moveTo(630,160);
-                startText.setText("Game Over!");
+                startText.setText("Game Over!" + "");
                 startText.setFontSansSerif(true,70);
                 fenster.wait(5000);
                 startText.setHidden(true);
