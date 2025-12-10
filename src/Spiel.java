@@ -8,6 +8,8 @@ public class Spiel
     Circle ball;
     Text startText, punkte1, punkte2, punkteStand1, punkteStand2;
 
+// Deklarierung der Objekte für das Spiel
+
     Spiel()
     {
         fenster = new View(1400, 800, "Pong");
@@ -27,10 +29,10 @@ public class Spiel
         barriereRechts = new Rectangle(1390, 0, 10, 800);
         barriereRechts.setColor(Color.darkGray);
 
-        schlaeger1 = new Rectangle(20, 360, 10, 80);
+        schlaeger1 = new Rectangle(20, 340, 10, 100);
         schlaeger1.setColor(Color.red);
 
-        schlaeger2 = new Rectangle(1370, 360, 10, 80);
+        schlaeger2 = new Rectangle(1370, 340, 10, 100);
         schlaeger2.setColor(Color.blue);
 
         ball = new Circle(690, 390, 10);
@@ -59,6 +61,8 @@ public class Spiel
         punkte2 = new Text(250, 300, "");
         punkte2.setFontSansSerif(true,100);
 
+// Initialisierung der Objekte
+
         while (true) {
             if (fenster.keyEnterPressed()) break;
 
@@ -73,11 +77,13 @@ public class Spiel
             if (fenster.keyEnterPressed()) break;
         }
 
+// While true schleife für den Ablauf des Starttextes der direkt am Anfang erscheint
 
         this.startText();
         this.startPunkt();
         this.spielFunktion();
 
+// Aufruf der Methoden StartText, Startpunkt und Spielfunktion
     }
 
     void mittelpunktErstellen()
@@ -90,6 +96,7 @@ public class Spiel
         }
     }
 
+// Methode zur bestimmung des Mittelpunktes des Feldes
 
     void startText()
     {
@@ -109,7 +116,7 @@ public class Spiel
         startText.setHidden(true);
     }
 
-
+// Methode zur erstellung des Startextes zum Start von jeder Runde und am Anfang
 
     void startPunkt()
     {
@@ -124,6 +131,7 @@ public class Spiel
         ball.setDirection(winkel * 10);
     }
 
+// Methode zur Bewegung des Balles zum Mittelpunkt am Anfang jeder Runde und zufällige Winkelbestimmung, die aber aufgrund von dX / dY nicht funktioniert
 
     void spielFunktion()
     {
@@ -136,6 +144,8 @@ public class Spiel
         int p2 = 0;
 
         long startZeit = Tools.getStartTime();
+
+// Deklarierung der Int für die Geschwindigkeiten, die Punktzahl und des longs für die Zeit die pro runde vergeht
 
         while(true)
         {
@@ -159,9 +169,13 @@ public class Spiel
                 schlaeger2.move(0,sY);
             }
 
+// Steuerung der Schläger mit den Tasten S und W und Pfeiltaste Hoch und Pfeiltaste runter
+
             fenster.wait(2);
 
             ball.move(dX, dY);
+
+// Bewegung des Balles mit der Geschwindigkeit dX, dY
 
             if (Tools.getElapsedTime(startZeit) >= 10)
             {
@@ -188,47 +202,53 @@ public class Spiel
 
             fenster.wait(2);
 
-                if(ball.intersects(barriereLinks))
-                {
-                    p1++;
-                    punkteStand1.setText("Rot: " + p1);
-                }
+// Verschiedene Arten der Geschwindigkeitssteigerung des Balles
 
-                if (ball.intersects(barriereLinks) && p1 < 10)
-                {
-                    punkte2.setHidden(false);
-                    punkte2.setText("" + p1);
-                    fenster.wait(1000);
-                    punkte2.setHidden(true);
+            if(ball.intersects(barriereLinks))
+            {
+                p1++;
+                punkteStand1.setText("Rot: " + p1);
+            }
 
-                    this.startPunkt();
-                    this.startText();
+            if (ball.intersects(barriereLinks) && p1 < 10)
+            {
+                punkte2.setHidden(false);
+                punkte2.setText("" + p1);
+                fenster.wait(1000);
+                punkte2.setHidden(true);
 
-                    dX = 4;
-                    dY = 4;
-                    startZeit = Tools.getStartTime();
-                }
+                this.startPunkt();
+                this.startText();
 
-                if(ball.intersects(barriereRechts))
-                {
-                    p2++;
-                    punkteStand2.setText("Blau: " + p2);
-                }
+                dX = 4;
+                dY = 4;
+                startZeit = Tools.getStartTime();
+            }
 
-                if(ball.intersects(barriereRechts) && p2 < 10)
-                {
-                    punkte1.setHidden(false);
-                    punkte1.setText("" + p2);
-                    fenster.wait(1000);
-                    punkte1.setHidden(true);
+// Punktestand des roten Teams und zurücksetzung der Ausgangsposition und Geschwindigkeit
 
-                    this.startPunkt();
-                    this.startText();
+            if(ball.intersects(barriereRechts))
+            {
+                p2++;
+                punkteStand2.setText("Blau: " + p2);
+            }
 
-                    dX = 4;
-                    dY = 4;
-                    startZeit = Tools.getStartTime();
-                }
+            if(ball.intersects(barriereRechts) && p2 < 10)
+            {
+                punkte1.setHidden(false);
+                punkte1.setText("" + p2);
+                fenster.wait(1000);
+                punkte1.setHidden(true);
+
+                this.startPunkt();
+                this.startText();
+
+                dX = 4;
+                dY = 4;
+                startZeit = Tools.getStartTime();
+            }
+
+// Punktestand des blauen Teams und zurücksetzung der Ausgangsposition und Geschwindigkeit
 
             if (p1 > 10 || p2 > 10)
             {
@@ -241,6 +261,8 @@ public class Spiel
 
                 break;
             }
+
+// if - Verzweigung für das Spielende sollte eines der beiden Teams 10 Punkte erlangen
         }
     }
 
